@@ -1,0 +1,58 @@
+/* Стили для списка макетов */
+
+	body { 
+		font-family: Arial, sans-serif;
+	}
+	
+	.list { 
+		margin: 3em 3em; 
+	}
+	
+	.page-item {
+		margin-bottom: 2em;
+		border-radius: 0.25em;
+		background-color: #F4F4F4;
+	}
+	
+	a {
+		display: block;
+		color: black;
+		padding: 0.5em 0.5em 0.5em 1em;
+		background-color: #d1e3ff;
+		text-decoration: none; 
+	}
+	
+	a:hover { 
+		background-color: #a9cbff;
+	}
+	
+	a > span {
+		text-decoration: underline;
+	}
+	
+	form {
+		font-size: 90%;
+		padding: 0 0.5em 0.5em 1em;
+	}
+	form:first-of-type { padding-top: 0.5em; }
+
+
+	/* Стили переключателей */
+		.variant-title { margin-right: 0.5em; }
+	
+		label {
+			display: inline-block;
+			padding: 0.5em 1em; 
+			border: 1px solid #B0B0B0;
+			cursor: pointer;
+		}
+		label:hover {
+			background-color: #EBEBEB;
+		}
+		
+		input { 
+			vertical-align: middle;
+			padding: 0;
+			margin: 0 0.5em 0 0;
+		}
+		
