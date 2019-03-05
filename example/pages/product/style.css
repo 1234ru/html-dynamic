@@ -1,0 +1,6 @@
+.price, .price-discounted { font-weight: bold; }
+.price-old { text-decoration: line-through; }
+.price-discounted { color: red; }
+.discount { color: red; }
+
+.availability { color: #808080; }
