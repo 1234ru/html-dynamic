@@ -43,5 +43,9 @@
 		</div>
 	{%}
 	</div>
+	
+	<div class="github-link">
+		Powered by <a href="https://github.com/1234ru/html-dynamic">https://github.com/1234ru/html-dynamic</a>
+	</div>
 </body>
 </html>

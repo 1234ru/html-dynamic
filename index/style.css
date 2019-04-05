@@ -14,7 +14,7 @@
 		background-color: #F4F4F4;
 	}
 	
-	a {
+	.list a {
 		display: block;
 		color: black;
 		padding: 0.5em 0.5em 0.5em 1em;
@@ -22,11 +22,11 @@
 		text-decoration: none; 
 	}
 	
-	a:hover { 
+	.list a:hover { 
 		background-color: #a9cbff;
 	}
 	
-	a > span {
+	.list a > span {
 		text-decoration: underline;
 	}
 	
@@ -54,5 +54,20 @@
 			vertical-align: middle;
 			padding: 0;
 			margin: 0 0.5em 0 0;
+		}
+	
+	/* Ссылка на github */
+	
+		.github-link {
+			margin-bottom: 2em;
+			font-size: 12px;
+			text-align: center;
+			color: #808080;
+		}
+		.github-link > a {
+			color: inherit;
+		}
+		.github-link > a:hover {
+			color: #404040;
 		}
 		
