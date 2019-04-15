@@ -40,11 +40,16 @@ class HTMLdynamic {
 			
 			if (isset($cfg['content']))
 				$page['content'] = $this->pagesDir . $dir . $cfg['content']; 
-			
-			if (isset($cfg['data'])) 
-				$page['data'] = is_string($cfg['data'])
-					? require $this->pagesDir . $dir . $cfg['data']
-					: $cfg['data'] ;
+
+			$page['data'] = $this->config['data'] ?? [];
+
+			if (isset($cfg['data']))
+				$page['data'] =
+                    (
+                        is_string($cfg['data'])
+                        ? require $this->pagesDir . $dir . $cfg['data']
+                        : $cfg['data']
+                    ) + $page['data'] ; // сначала данные из частного конфига, потом - из общего
 			
 			$html = websun_parse_template_path(
 				$page,
