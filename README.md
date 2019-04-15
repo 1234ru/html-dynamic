@@ -17,10 +17,31 @@
 
 ([Установка nginx и PHP на Windows](https://gist.github.com/1234ru/7d54192e375d8e703d14c063e56e614f))
 
+### Необходимые директивы для nginx
+
+```nginx
+        location ~ \.php$ {
+                fastcgi_pass php-handler; # где-то должно быть такое: upstream php-handler { server unix:/run/php/php7.1-fpm.sock; }
+                fastcgi_param SCRIPT_FILENAME $document_root$uri;
+                include fastcgi_params;
+        }
+        
+        index /index.php; # необязательно, но удобно для обращения к индексу по доменному имени без указания пути
+```
+
+## Как подключить
+
+1. `git submodule add https://github.com/1234ru/html-dynamic.git`
+
+1. `cp -r html-dynamic/example/* . ; rm doc.md`
+
+1. В `index.php` меняем `..` на `html-dynamic` в подключении файла `HTMLdynamic.php`.
+   Например, так: `sed -i 's/\.\./html-dynamic/' index.php`
+
+1. Открываем `index.php` через браузер - он должен работать.
+
 
 ## Как использовать
-
-Пример подключения — здесь в `example`:
 
 * `index.php` — точка входа
 * `config.php` — конфигурация
