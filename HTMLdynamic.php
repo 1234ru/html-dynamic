@@ -96,7 +96,7 @@ class HTMLdynamic {
 				)
 			);
 		}
-		elseif ($type == 'css' AND isset($page_cfg['dir'])) {
+		elseif (in_array($type, ['css', 'js']) AND isset($page_cfg['dir'])) {
 			foreach (scandir($this->pagesDir . $page_cfg['dir']) as $file) {
 				if ( pathinfo($file, PATHINFO_EXTENSION) == $type )
 					$list[] = "pages/$page_cfg[dir]/$file";
