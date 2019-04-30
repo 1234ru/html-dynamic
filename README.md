@@ -31,7 +31,8 @@
 
 ## Как подключить
 
-1. `git submodule add https://github.com/1234ru/html-dynamic.git`
+1. `git submodule add https://github.com/1234ru/html-dynamic.git`  
+   `git submodule update --init --recursive`
 
 1. `cp -r html-dynamic/example/* . ; rm doc.md`
 
