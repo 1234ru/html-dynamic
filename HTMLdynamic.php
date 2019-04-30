@@ -1,6 +1,6 @@
 <?php
 
-require_once 'websun.php';
+require_once 'websun/websun.php';
 
 class HTMLdynamic {
 
