@@ -2,16 +2,26 @@
 
 	body { 
 		font-family: Arial, sans-serif;
+		margin: 0;
+		padding: 0;
 	}
-	
-	.list { 
-		margin: 3em 3em; 
+
+	@media (max-width: 414px) {
+		.list {
+			margin: 2em 0;
+		}
 	}
-	
+	@media (min-width: 415px) {
+		.list {
+			margin: 3em 3em;
+		}
+	}
+
 	.page-item {
 		margin-bottom: 2em;
+		padding-bottom: .25em;
 		border-radius: 0.25em;
-		background-color: #F4F4F4;
+		background-color: #F8F8F8;
 	}
 	
 	.list a {
@@ -31,25 +41,62 @@
 	}
 	
 	form {
+		margin: 1em .5em;
+		padding: .5em 1em;
 		font-size: 90%;
-		padding: 0 0.5em 0.5em 1em;
+		border: 1px solid #B0B0B0;
+		background-color: #F4F4F4;
 	}
-	form:first-of-type { padding-top: 0.5em; }
+	@media (max-width: 414px) {
+		form {
+
+		}
+	}
+	@media (min-width: 415px) {
+		form {
+		}
+	}
 
 
 	/* Стили переключателей */
-		.variant-title { margin-right: 0.5em; }
-	
+		@media (max-width: 414px) {
+			.variant-title {
+				display: block;
+				margin-bottom: .5em;
+			}
+		}
+		@media (min-width: 415px) {
+			.variant-title { margin-right: 0.5em; }
+		}
+
 		label {
-			display: inline-block;
-			padding: 0.5em 1em; 
-			border: 1px solid #B0B0B0;
 			cursor: pointer;
 		}
-		label:hover {
+
+		label:not(.single) {
+			margin-bottom: .5em;
+			border: 1px dashed #808080;
+			padding: .5em;
+			padding-left: 1em;
+		}
+		label:not(.single):hover {
 			background-color: #EBEBEB;
 		}
-		
+		label.single {
+			display: block;
+			padding-left: 1em;
+		}
+		@media (max-width: 414px) {
+			label:not(.single) {
+				display: block;
+			}
+		}
+		@media (min-width: 415px) {
+			label:not(.single) {
+				display: inline-block;
+			}
+		}
+
 		input { 
 			vertical-align: middle;
 			padding: 0;

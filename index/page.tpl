@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>{*page.title*}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{%*page.css*}<link rel="stylesheet" href="{*page.css:*}">{%}
 	{%*page.js*}<script src="{*page.js:*}"></script>{%}
 </head>
@@ -21,7 +22,7 @@
 					{?*list:variants:title*}<span class="variant-title">{*list:variants:title*}</span>{?}
 					
 					{%*list:variants:values*}
-						<label>
+						<label {?!*list:variants:values^COUNT > 1*}class="single"{?}>
 							<input
 							 type="{?*list:variants:values^COUNT > 1*}radio{?!}checkbox{?}"
 							 name="v[{*list:variants:^KEY*}]" value="{*list:variants:values:^KEY*}"
