@@ -10,7 +10,7 @@ class HTMLdynamic {
 	private $pagesDir;
 	
 	function __construct($config) {
-		$this->config = $config;
+		$this->config = self::expandBriefVariants($config);
 		$this->baseDir = dirname(debug_backtrace()[0]['file']) . '/';
 		$this->templatesDir = dirname($this->baseDir . $this->config['template']);
 		$this->pagesDir = $this->baseDir . 'pages/';	
@@ -112,7 +112,7 @@ class HTMLdynamic {
 	function generateIndexHTML() {
 		
 		$webdir = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']) ) . '/index/';
-		
+
 		$index = [
 			'page' => [
 				'title' => 'Список макетов',
@@ -129,5 +129,29 @@ class HTMLdynamic {
 		);
 		
 		return $html;
+	}
+
+	/**
+	 * Раскрывает сокращённую запись варианта.
+	 *
+	 * Было:  some_variant => Описание
+	 * Стало: some_variant => [ values => [ 1 => Описание ] ]
+	 * @param array $config общая конфигурация верхнего уровня
+	 * @return array
+	 */
+	static function expandBriefVariants($config) {
+		foreach ($config['pages'] as &$page) {
+			if (!isset($page['variants']))
+				continue;
+			foreach ($page['variants'] as &$v)
+				if (is_string($v)) {
+					$v = [
+						'values' => [
+							1 => $v
+						]
+					];
+				}
+		}
+		return $config;
 	}
 }
