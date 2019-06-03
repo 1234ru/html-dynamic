@@ -37,19 +37,27 @@ class HTMLdynamic {
 			];
 			
 			$page['variants'] = $_GET['v'] ?? [];
-			
+
 			if (isset($cfg['content']))
-				$page['content'] = $this->pagesDir . $dir . $cfg['content']; 
+				$page['content'] = $this->pagesDir . $dir . $cfg['content'];
 
-			$page['data'] = $this->config['data'] ?? [];
+			if (!isset($cfg['data'])) {
+				$default_data_file = 'data.php';
+				$cfg['data'] = (is_file($this->pagesDir . $dir . $default_data_file))
+					? $default_data_file
+					: [] ;
+			}
 
-			if (isset($cfg['data']))
-				$page['data'] =
-                    (
-                        is_string($cfg['data'])
-                        ? require $this->pagesDir . $dir . $cfg['data']
-                        : $cfg['data']
-                    ) + $page['data'] ; // сначала данные из частного конфига, потом - из общего
+			$page['data'] =
+				// сначала данные из частного конфига, потом - из общего
+				(
+					is_string($cfg['data'])
+					? require $this->pagesDir . $dir . $cfg['data']
+					: $cfg['data']
+				)
+				+
+				( $page['data'] ?? [] )
+				;
 			
 			$html = websun_parse_template_path(
 				$page,
@@ -71,7 +79,8 @@ class HTMLdynamic {
 	 * Если конфигурация не указана, возвращает общеиспользуемый список.
 	 * 
 	 * @param string $type css или js
-	 * @param array|void 
+	 * @param array|void
+	 * @return array
 	 */
 	function listPageClientFiles($type, $page_cfg = []) {
 		$list = [];
