@@ -61,7 +61,7 @@ class HTMLdynamic {
 					: $cfg['data']
 				)
 				+
-				( $page['data'] ?? [] )
+				( $this->config['data'] ?? [] )
 				;
 			
 			$html = websun_parse_template_path(
