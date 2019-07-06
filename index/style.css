@@ -79,7 +79,6 @@
 		}
 
 		label:not(.single) {
-			margin-bottom: .5em;
 			border: 1px dashed #808080;
 			padding: .5em;
 			padding-left: 1em;
@@ -94,6 +93,9 @@
 		@media (max-width: 414px) {
 			label:not(.single) {
 				display: block;
+			}
+			label:not(.single):not(:first-of-type) {
+				margin-top: .5em;
 			}
 		}
 		@media (min-width: 415px) {
