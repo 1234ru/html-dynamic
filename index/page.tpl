@@ -30,6 +30,7 @@
 							<span>{*list:variants:values:*}</span>
 						</label>
 					{%}
+					/*
 					{?*list:variants:values^COUNT > 1*}
 						<label>
 							<input
@@ -39,6 +40,7 @@
 							<span>по умолчанию</span>
 						</label>
 					{?}
+					*/
 				</form>
 			{%}
 		</div>
