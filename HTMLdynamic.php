@@ -116,8 +116,27 @@ class HTMLdynamic {
 					$list[] = "pages/$page_cfg[dir]/$file";
 			}
 		}
-		
+
+		$list = array_map( [$this, 'addModificationTime'], $list);
+
 		return $list;
+	}
+
+	/** Добавляет к пути файла время последнего изменения.
+	 *
+	 * Нужно для подавления забора из кэша
+	 * предыдущих версий css- и js-файлов
+	 * (особенно актуально для смартфонов, где,
+	 * несмотря на отсутствие заголовков кэширования,
+	 * оно всё равно происходит).
+	 *
+	 * @param string $filepath путь к файлу относительно общего каталога страниц
+	 * @return string он же с добавленной временной меткой
+	 */
+	function addModificationTime($filepath) {
+		$absoulte_path = $this->baseDir . ltrim($filepath, '/');
+		$t = filemtime($absoulte_path);
+		return "$filepath?t=$t";
 	}
 	
 	/** Генерирует HTML-код страницы оглавления.
