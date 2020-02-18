@@ -30,6 +30,9 @@
 							<span>{*list:variants:values:*}</span>
 						</label>
 					{%}
+                    {?*list:variants:values^COUNT > 1*}
+						<button></button>
+					{?}
 					/*
 					{?*list:variants:values^COUNT > 1*}
 						<label>

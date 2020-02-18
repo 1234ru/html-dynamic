@@ -17,11 +17,7 @@
 			'dir' => 'product',
 			'content' => 'content.tpl',
 			'variants' => [
-				'has_discount' => [
-					'values' => [
-						1 => 'Есть скидка',
-					],
-				],
+				'has_discount' => 'Есть скидка',
 				'availability' => [
 					'title' => 'Наличие',
 					'values' => [

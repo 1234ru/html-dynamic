@@ -91,9 +91,11 @@
 			padding-left: 1em;
 		}
 		@media (max-width: 414px) {
+
 			label:not(.single) {
 				display: block;
 			}
+
 			label:not(.single):not(:first-of-type) {
 				margin-top: .5em;
 			}
@@ -102,6 +104,26 @@
 			label:not(.single) {
 				display: inline-block;
 			}
+		}
+
+		label + button {
+			/* чтоб размер был одинаков */
+			display: inline;
+			font-size: inherit;
+			font-family: inherit;
+			color: #808080;
+			background-color: transparent;
+			padding: .5em .7em;
+			border: 1px solid #C0C0C0;
+			cursor: pointer;
+		}
+		label + button:hover {
+			color: inherit;
+			border-color: #808080;
+		}
+		label + button::before {
+			content: "\29BB";
+			line-height: 1;
 		}
 
 		input { 
