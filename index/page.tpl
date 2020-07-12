@@ -24,8 +24,9 @@
 					{%*list:variants:values*}
 						<label {?!*list:variants:values^COUNT > 1*}class="single"{?}>
 							<input
-							 type="{?*list:variants:values^COUNT > 1*}radio{?!}checkbox{?}"
-							 name="v[{*list:variants:^KEY*}]" value="{*list:variants:values:^KEY*}"
+							 type="{?*list:variants:values^COUNT = 1 | list:variants:multi_check*}checkbox{?!}radio{?}"
+							 name="v[{*list:variants:^KEY*}]{?*list:variants:multi_check*}[]{?}"
+							 value="{*list:variants:values:^KEY*}"
 							 >
 							<span>{*list:variants:values:*}</span>
 						</label>

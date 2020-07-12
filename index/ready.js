@@ -19,7 +19,7 @@ $(document).ready(function() {
 	});
 
 	body.on('click', 'label + button', function () {
-		var checkedRadio = $(this).closest('form').find('input[type=radio]:checked');
+		var checkedRadio = $(this).closest('form').find('input:checked');
 		checkedRadio.attr('checked', false);
 		checkedRadio.change();
 		return false;
