@@ -4,16 +4,18 @@ $(document).ready(function() {
 
 	body.on('change', 'input', function() {
 			var input = $(this);
+			var form = input.closest('form');
 			var a = input.closest('.page-item').find('a');
 			var url = a.attr('href');
 			var name = encodeURIComponent( input.attr('name') );
 
-			url = url.replace( new RegExp('&' + name + '=[^&]+'), '' );
+			url = url.replace( new RegExp('&' + name + '=[^&]+', 'g'), '' );
 
-			if (input.is(':checked') && input.val() != '' ) { // не снятый чекбокс и не пустая радиокнопка
-				var append = input.serialize() ; // тут уже закодированное выражение вида name=value
-				url += '&' + append;
+			var append = form.serialize();
+			if (append) {
+				append = '&' + append;
 			}
+			url += append;
 
 			a.attr('href', url);
 	});
