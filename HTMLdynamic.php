@@ -1,7 +1,5 @@
 <?php
 
-require_once 'websun/websun.php';
-
 class HTMLdynamic {
 
 	private $config;
@@ -11,7 +9,8 @@ class HTMLdynamic {
 	
 	function __construct($config) {
 		$this->config = self::expandBriefVariants($config);
-		$this->baseDir = dirname(debug_backtrace()[0]['file']) . '/';
+        require_once $this->config['websun'];
+        $this->baseDir = dirname(debug_backtrace()[0]['file']) . '/';
 		$this->templatesDir = dirname($this->baseDir . $this->config['template']);
 		$this->pagesDir = $this->baseDir . 'pages/';	
 	}
