@@ -1,5 +1,6 @@
 <?php return 
 [
+    'websun' => __DIR__ . '/../_lib/websun.php', // путь к файлу https://webew.ru/articles/3609.webew
 
 	'template' => 'templates/_main.tpl',
 	
