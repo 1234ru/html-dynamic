@@ -11,8 +11,8 @@ class HTMLdynamic {
 		$this->config = self::expandBriefVariants($config);
         require_once $this->config['websun'];
         $this->baseDir = dirname(debug_backtrace()[0]['file']) . '/';
-		$this->templatesDir = dirname($this->baseDir . $this->config['template']);
-		$this->pagesDir = $this->baseDir . 'pages/';	
+		$this->templatesDir = $this->determineTemplatesDir();
+		$this->pagesDir = $this->baseDir . 'pages/';
 	}
 
 	/** Генерирует HTML-код страницы.
@@ -62,12 +62,15 @@ class HTMLdynamic {
 				+
 				( $this->config['data'] ?? [] )
 				;
-			
-			$html = websun_parse_template_path(
-				$page,
-				basename($this->config['template']), // путь к каталогу откидываем,
-				$this->templatesDir // т.к. он уже учтён в templatesDir 
-			);
+
+            $template = $this->config['template'];
+            if (!self::isFilePathFinal($template)) {
+                // Если указан относительный путь к шаблону,
+                // каталог откидываем, т.к. он уже учтён в templatesDir.
+                $template = basename($template);
+            }
+
+			$html = websun_parse_template_path($page, $template, $this->templatesDir);
 			
 		}
 		else
@@ -193,6 +196,23 @@ class HTMLdynamic {
 	 * @return string
 	 */
 	private function filePathOfPage($dir, $filename) {
-		return $this->pagesDir . $dir . $filename;
+        return (!self::isFilePathFinal($filename))
+            ? $this->pagesDir . $dir . $filename
+            : $filename;
 	}
+
+    private static function isFilePathFinal($path)
+    {
+        return in_array(mb_substr($path, 0, 1), ['/', '$', '^'])
+            OR (mb_substr($path, 1, 1) == ':');
+            // Windows - указан абсолютный путь - вида С:/...
+    }
+
+    private function determineTemplatesDir()
+    {
+        return dirname(
+            (!self::isFilePathFinal($this->config['template']) ? $this->baseDir : '')
+            . $this->config['template']
+        );
+    }
 }
