@@ -136,7 +136,14 @@ class HTMLdynamic {
 	 * @return string он же с добавленной временной меткой
 	 */
 	function addModificationTime($filepath) {
-		$absoulte_path = $this->baseDir . ltrim($filepath, '/');
+        // Абсолютные пути к js и css всегда указаны относительно каталога веб-севрера
+		if (self::isFilePathFinal($filepath)) {
+            $absoulte_path = !in_array(pathinfo($filepath, PATHINFO_EXTENSION), ['js', 'css'])
+                ? $filepath
+                : $_SERVER['DOCUMENT_ROOT'] . $filepath;
+        } else {
+            $absoulte_path = $this->baseDir . ltrim($filepath, '/');
+        }
 		$t = filemtime($absoulte_path);
 		return "$filepath?t=$t";
 	}
