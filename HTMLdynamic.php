@@ -1,5 +1,7 @@
 <?php
 
+namespace One234ru;
+
 class HTMLdynamic {
 
 	private $config;

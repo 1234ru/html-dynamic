@@ -1,0 +1,11 @@
+{
+  "name": "one234ru/html-dynamic",
+  "autoload": {
+    "psr-4": {
+      "One234ru\\": "./"
+    }
+  },
+  "require": {
+    "php": ">=7.3"
+  }
+}

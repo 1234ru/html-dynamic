@@ -1,0 +1,13 @@
+{
+  "name": "one234ru/html-dynamic",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "1234ru",
+      "email": "1234ru@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.3"
+  }
+}
