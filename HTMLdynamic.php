@@ -6,13 +6,14 @@ class HTMLdynamic {
 
 	private $config;
 	private $baseDir; // все каталоги - с закрывающим слэшом
+    private $webDir;
 	private $templatesDir;
 	private $pagesDir;
-	
+
 	function __construct($config) {
 		$this->config = self::expandBriefVariants($config);
-        require_once $this->config['websun'];
         $this->baseDir = dirname(debug_backtrace()[0]['file']) . '/';
+        $this->webDir = self::webPath($this->baseDir);
 		$this->templatesDir = $this->determineTemplatesDir();
 		$this->pagesDir = $this->baseDir . 'pages/';
 	}
@@ -72,8 +73,10 @@ class HTMLdynamic {
                 $template = basename($template);
             }
 
-			$html = websun_parse_template_path($page, $template, $this->templatesDir);
-			
+			$html = $this->config['html_generation_code'](
+                compact('page', 'template')
+                + [ 'temples_dir' => $this->templatesDir ]
+            ) ;
 		}
 		else
 			$html = "Page <b>$params[page]</b> doesn't exist.";
@@ -154,20 +157,29 @@ class HTMLdynamic {
 	 * @return string
 	 */
 	function generateIndexHTML() {
-		
-		$webdir = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']) ) . '/index/';
 
-		$index = [
+        // $index_fs_dir = __DIR__ . '/index/';
+        // $index_web_dir = self::webPath($index_fs_dir);
+		$index_web_dir = $this->webDir . 'index/';
+        // должно работать через символическую ссылку
+        // html/index -> vendor/one234ru/html-dynamic/index
+
+		$index_data = [
 			'page' => [
 				'title' => 'Список макетов',
-				'js' => [ $webdir . 'jquery.min.js', $webdir . 'ready.js' ],
-				'css' => [ $webdir . 'style.css' ],
+				'js' => [
+                    $index_web_dir . 'jquery.min.js',
+                    $index_web_dir . 'ready.js'
+                ],
+				'css' => [
+                    $index_web_dir . 'style.css'
+                ],
 			],
 			'list' => $this->config['pages']
 		];
 		
 		$html = websun_parse_template_path(
-			$index,
+			$index_data,
 			__DIR__ . '/index/page.tpl',
 			$this->templatesDir
 		);
@@ -222,6 +234,14 @@ class HTMLdynamic {
         return dirname(
             (!self::isFilePathFinal($this->config['template']) ? $this->baseDir : '')
             . $this->config['template']
+        );
+    }
+
+    private static function webPath($file_system_dir)
+    {
+        return mb_substr(
+            $file_system_dir,
+            mb_strlen($_SERVER['DOCUMENT_ROOT'])
         );
     }
 }

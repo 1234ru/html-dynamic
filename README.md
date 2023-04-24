@@ -31,20 +31,41 @@ index /index.php; # необязательно, но удобно, чтобы п
 
 ## Как подключить
 
-1. `git submodule add https://github.com/1234ru/html-dynamic.git`  
-   `git submodule update --init --recursive html-dynamic`
+1. Устанавливаем через Composer. 
+ Добавляем `composer.json`
+```json
+"repositories": [
+  {
+        "type": "git",
+        "url": "ssh://1234ru@1234ru.net:2222/~/tmp-git-repos/html-dynamic/"
+    }
+]
+```
+Даем команду `composer.bat install one234ru/html-dynamic`.
 
-1. `cp -r html-dynamic/example/* . ; rm doc.md`
+~~`git submodule add https://github.com/1234ru/html-dynamic.git`  
+   `git submodule update --init --recursive html-dynamic`~~
 
-1. В `index.php` меняем `..` на `html-dynamic` в подключении файла `HTMLdynamic.php`.
-   Например, так: `sed -i 's/\.\./html-dynamic/' index.php`
+2. Далее:
+```bash
+mkdir html # Если каталог веб-сервера не отведен исключительно под html
+cp -r vendor/one234ru/html-dynamic/example/* html
+cd html
+rm doc.md
+ln -s ../vendor/one234ru/html-dynamic/index/ index # для стилей и скриптов индекса 
+```
 
-1. Открываем `index.php` через браузер - он должен работать.
+Символическая ссылка (`ln -s`) нужна для доступа к js- и css-файлам библиотеки, если каталог `vendor` закрыт от доступа через веб.
+
+~~В `index.php` меняем `..` на `html-dynamic` в подключении файла `HTMLdynamic.php`.
+   Например, так: `sed -i 's/\.\./html-dynamic/' index.php`~~
+
+3. Открываем `index-ajax.php` через браузер - он должен работать.
 
 
 ## Как использовать
 
-* `index.php` — точка входа
+* `index-ajax.php` — точка входа
 * `config.php` — конфигурация
 * `example/doc.md` — черновик пояснений
 
