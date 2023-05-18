@@ -75,7 +75,7 @@ class HTMLdynamic {
 
 			$html = $this->config['html_generation_code'](
                 compact('page', 'template')
-                + [ 'temples_dir' => $this->templatesDir ]
+                + [ 'templates_dir' => $this->templatesDir ]
             ) ;
 		}
 		else
