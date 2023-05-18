@@ -141,6 +141,10 @@ class HTMLdynamic {
 	 * @return string он же с добавленной временной меткой
 	 */
 	function addModificationTime($filepath) {
+        if (parse_url($filepath, PHP_URL_SCHEME)) {
+            // Пути вида http(s)://..., оставляем без изменений
+            return $filepath;
+        }
         // Абсолютные пути к js и css всегда указаны относительно каталога веб-севрера
 		if (self::isFilePathFinal($filepath)) {
             $absoulte_path = !in_array(pathinfo($filepath, PATHINFO_EXTENSION), ['js', 'css'])
