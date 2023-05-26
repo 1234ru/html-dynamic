@@ -241,7 +241,7 @@ class HTMLdynamic {
         );
     }
 
-    private static function webPath($file_system_dir)
+    public static function webPath($file_system_dir)
     {
         return mb_substr(
             $file_system_dir,
