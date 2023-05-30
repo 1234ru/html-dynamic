@@ -26,12 +26,12 @@ class HTMLdynamic {
 		
 		if (!isset($params['page'])) {
 			$html = $this->generateIndexHTML();
-			
 		}
 		elseif ( $cfg = ($this->config['pages'][ $params['page'] ] ?? FALSE) ) {
 			
-			$dir = isset($cfg['dir']) ? $cfg['dir'] . '/' : '';
-			
+			// $dir = isset($cfg['dir']) ? $cfg['dir'] . '/' : '';
+			$dir = self::getPageDirPath($cfg, true);
+
 			$page['page'] = [ 
 				'title' => $cfg['title'],
 				'css' => $this->listPageClientFiles('css', $cfg),
@@ -42,15 +42,17 @@ class HTMLdynamic {
 
 			if (!isset($cfg['content'])) {
 				$default_content_file = 'content.tpl';
-				if (is_file($this->filePathOfPage($dir, $default_content_file)))
-					$cfg['content'] = $default_content_file;
-			}
-			if (isset($cfg['content']))
-				$page['content'] = $this->filePathOfPage($dir, $cfg['content']);
-
-			if (!isset($cfg['data'])) {
+				if (is_file($this->filePathOfPage($dir, $default_content_file))) {
+                    $cfg['content'] = $default_content_file;
+                }
+            }
+			if (isset($cfg['content'])) {
+                $page['content'] = $this->filePathOfPage($dir, $cfg['content']);
+            }
+            if (!isset($cfg['data'])) {
 				$default_data_file = 'data.php';
-				$cfg['data'] = (is_file($this->filePathOfPage($dir, $default_data_file)))
+				$cfg['data'] =
+                    (is_file($this->filePathOfPage($dir, $default_data_file)))
 					? $default_data_file
 					: [] ;
 			}
@@ -95,33 +97,43 @@ class HTMLdynamic {
 	 * @return array
 	 */
 	function listPageClientFiles($type, $page_cfg = []) {
-		$list = [];
-		if (isset($this->config[$type]))
-			$list = is_array($this->config[$type])
-				? $this->config[$type] 
-				: [ $this->config[$type] ] ;
+		$list = $this->config[$type] ?? [];
+        if (!is_array($list)) {
+            $list = [ $list ];
+        }
+        $page_dir = self::getPageDirPath($page_cfg);
 		if (isset($page_cfg[$type])) {
 			$list = array_merge(
 				$list,
 				array_map( // подставляем каталог страницы к адресу файла 
-					function($path) use ($page_cfg) {
-						if ( substr($path, 0, 2) == '$/' ) // путь относительно корневого каталога инсталляции - просто удаляем маркер
-							$path = substr($path, 2);
-						elseif ( substr($path, 0, 1) != '/' AND ($page_cfg['dir'] ?? '') ) // путь относительно каталога страницы
-							$path = "pages/$page_cfg[dir]/$path";
-						else // абсолютный путь оставляем без изменений
-							; 
-						return $path;	
+					function($path) use ($page_dir) {
+						if ( substr($path, 0, 2) == '$/' ) {
+                            // путь относительно корневого каталога
+                            // инсталляции - просто удаляем маркер
+                            // $path = substr($path, 2);
+                            $path = substr($path, 1);
+                        } elseif (
+                            substr($path, 0, 1) != '/'
+                            AND
+                            substr($path, 1, 1) != ':' // Win
+                        ) {
+                            // путь относительно каталога страницы
+                            $path = "$page_dir/$path";
+                        } // else ; // абсолютный путь оставляем без изменений
+						return $path;
 					},
-					is_array($page_cfg[$type]) ? $page_cfg[$type] : [ $page_cfg[$type] ]
+					is_array($page_cfg[$type])
+                        ? $page_cfg[$type]
+                        : [ $page_cfg[$type] ]
 				)
 			);
 		}
 		elseif (in_array($type, ['css', 'js']) AND isset($page_cfg['dir'])) {
-			foreach (scandir($this->pagesDir . $page_cfg['dir']) as $file) {
-				if ( pathinfo($file, PATHINFO_EXTENSION) == $type )
-					$list[] = "pages/$page_cfg[dir]/$file";
-			}
+			foreach (scandir($page_dir) as $file) {
+				if ( pathinfo($file, PATHINFO_EXTENSION) == $type ) {
+                    $list[] = "$page_dir/$file";
+                }
+            }
 		}
 
 		$list = array_map( [$this, 'addModificationTime'], $list);
@@ -216,14 +228,21 @@ class HTMLdynamic {
 	}
 
 	/** Строит путь к файлу в каталоге страницы.
-	 * @param string $dir название подкаталога страницы в общем каталоге страниц
+	 * @param string $page_dir_final название подкаталога страницы в общем каталоге страниц
 	 * @param string $filename имя файла
 	 * @return string
 	 */
-	private function filePathOfPage($dir, $filename) {
-        return (!self::isFilePathFinal($filename))
-            ? $this->pagesDir . $dir . $filename
-            : $filename;
+	private function filePathOfPage($page_dir_final, $filename) {
+        if (!self::isFilePathFinal($filename)) {
+            $path = $page_dir_final;
+            if (mb_substr($page_dir_final, -1) != '/') {
+                $path .= "/";
+            }
+            $path .= $filename;
+        } else {
+            $path = $filename;
+        }
+        return $path;
 	}
 
     private static function isFilePathFinal($path)
@@ -247,5 +266,18 @@ class HTMLdynamic {
             $file_system_dir,
             mb_strlen($_SERVER['DOCUMENT_ROOT'])
         );
+    }
+
+    private static function getPageDirPath(
+        $page_cfg,
+        $add_trailing_slash = false
+    ) {
+        $path = self::isFilePathFinal($page_cfg['dir'])
+            ? $page_cfg['dir']
+            : "pages/$page_cfg[dir]";
+        if ($add_trailing_slash) {
+            $path .= "/";
+        }
+        return $path;
     }
 }
