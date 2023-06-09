@@ -57,16 +57,29 @@ class HTMLdynamic {
 					: [] ;
 			}
 
-			$page['data'] =
-				// сначала данные из частного конфига, потом - из общего
-				(
-					is_string($cfg['data'])
-					? require $this->filePathOfPage($dir, $cfg['data'])
-					: $cfg['data']
-				)
-				+
-				( $this->config['data'] ?? [] )
-				;
+            // сначала данные из частного конфига, потом - из общего
+            if (is_string($cfg['data'])) {
+                $data_file_path = $this->filePathOfPage($dir, $cfg['data']);
+                $ext = pathinfo($data_file_path, PATHINFO_EXTENSION);
+                if ($ext == 'php') {
+                    $page['data'] = require $data_file_path;
+                } elseif ($ext == 'json') {
+                    $page['data'] = json_decode(
+                        file_get_contents($data_file_path),
+                        true
+                    );
+                } else {
+                    trigger_error(
+                        "Data file of unknown extension: $data_file_path",
+                        E_USER_WARNING
+                    );
+                    $page['data'] = [];
+                }
+            } else {
+                $page['data'] = $cfg['data'];
+            }
+
+            $page['data'] += ( $this->config['data'] ?? [] );
 
             $template = $this->config['template'];
             if (!self::isFilePathFinal($template)) {
