@@ -32,7 +32,7 @@ class HTMLdynamic {
 			// $dir = isset($cfg['dir']) ? $cfg['dir'] . '/' : '';
 			$dir = self::getPageDirPath($cfg, true);
 
-			$page['page'] = [ 
+			$page = [
 				'title' => $cfg['title'],
 				'css' => $this->listPageClientFiles('css', $cfg),
 				'js' => $this->listPageClientFiles('js', $cfg),
@@ -47,7 +47,8 @@ class HTMLdynamic {
                 }
             }
 			if (isset($cfg['content'])) {
-                $page['content'] = $this->filePathOfPage($dir, $cfg['content']);
+                // Для совместимости с Router content вкладываем в data
+                $page['data']['content'] = $this->filePathOfPage($dir, $cfg['content']);
             }
             if (!isset($cfg['data'])) {
 				$default_data_file = 'data.php';
@@ -62,9 +63,9 @@ class HTMLdynamic {
                 $data_file_path = $this->filePathOfPage($dir, $cfg['data']);
                 $ext = pathinfo($data_file_path, PATHINFO_EXTENSION);
                 if ($ext == 'php') {
-                    $page['data'] = require $data_file_path;
+                    $page['data'] += require $data_file_path;
                 } elseif ($ext == 'json') {
-                    $page['data'] = json_decode(
+                    $page['data'] += json_decode(
                         file_get_contents($data_file_path),
                         true
                     );
@@ -73,10 +74,10 @@ class HTMLdynamic {
                         "Data file of unknown extension: $data_file_path",
                         E_USER_WARNING
                     );
-                    $page['data'] = [];
+                    // $page['data'] = [];
                 }
             } else {
-                $page['data'] = $cfg['data'];
+                $page['data'] += $cfg['data'];
             }
 
             $page['data'] += ( $this->config['data'] ?? [] );
